@@ -341,8 +341,8 @@ double train_for_one_iter(int iter, int D, int V, int K, int N,
     row_tt = end - start;
     iter_tt = end - stt;
 
-    printf("iter=%d iter_tt=%ld col_tt=%ld row_tt=%ld ll=%f %f M tokens/s\n", 
-            iter, iter_tt, col_tt, row_tt, ll, ((double) N/1e6) / (iter_tt / 1e3));
+    //printf("iter=%d iter_tt=%ld col_tt=%ld row_tt=%ld ll=%f %f M tokens/s\n", 
+    //        iter, iter_tt, col_tt, row_tt, ll, ((double) N/1e6) / (iter_tt / 1e3));
     return ll;
 }
 
@@ -431,9 +431,9 @@ void init_warp_parallel(int D, int V, int K,
 
     parallel_reduce_nk(global_nk, params, K);
 
-    for (int i = 0; i < 10; i ++)
-        printf("%d ", global_nk[i]);
-    printf("\n");
+    //for (int i = 0; i < 10; i ++)
+    //    printf("%d ", global_nk[i]);
+    //printf("\n");
 }
 
 void parallel_copy_nk(int * global_nk, thread_params * params, int K) {
@@ -586,10 +586,12 @@ double visit_by_row_parallel(int D, int V, int K,
         sample_times_all += params[i].sample_times;
         accept_times_all += params[i].accept_times;
     }
+    /*
     printf("one_over_accept_all=%f sample_times_all=%ld accept_times_all=%ld one_over_accept=%f accept_per=%f\n",
             one_over_accept_all, sample_times_all, accept_times_all,
             one_over_accept_all/sample_times_all,
             accept_times_all * 1.0 / sample_times_all);
+	    */
     return global_ll;
 }
 
@@ -723,10 +725,11 @@ double visit_by_col_parallel(int D, int V, int K,
         sample_times_all += params[i].sample_times;
         accept_times_all += params[i].accept_times;
     }
+    /*
     printf("one_over_accept_all=%f sample_times_all=%ld accept_times_all=%ld one_over_accept=%f accept_per=%f\n",
             one_over_accept_all, sample_times_all, accept_times_all,
             one_over_accept_all/sample_times_all,
-            accept_times_all * 1.0 / sample_times_all);
+            accept_times_all * 1.0 / sample_times_all);*/
 
     return global_ll;
 }
@@ -867,10 +870,11 @@ double visit_by_row_parallel_seperate(int ld, int V, int K,
         sample_times_all += params[i].sample_times;
         accept_times_all += params[i].accept_times;
     }
+    /*
     printf("one_over_accept_all=%f sample_times_all=%ld accept_times_all=%ld one_over_accept=%f accept_per=%f\n",
             one_over_accept_all, sample_times_all, accept_times_all,
             one_over_accept_all/sample_times_all,
-            accept_times_all * 1.0 / sample_times_all);
+            accept_times_all * 1.0 / sample_times_all);*/
     return global_ll;
 }
 
@@ -1017,10 +1021,11 @@ double visit_by_col_parallel_separate(int D, int V, int K,
         sample_times_all += params[i].sample_times;
         accept_times_all += params[i].accept_times;
     }
+    /*
     printf("one_over_accept_all=%f sample_times_all=%ld accept_times_all=%ld one_over_accept=%f accept_per=%f\n",
             one_over_accept_all, sample_times_all, accept_times_all,
             one_over_accept_all/sample_times_all,
-            accept_times_all * 1.0 / sample_times_all);
+            accept_times_all * 1.0 / sample_times_all);*/
 
     return global_ll;
 }
@@ -1165,10 +1170,11 @@ double visit_by_row_parallel_dynamic(int ld, int V, int K,
         sample_times_all += params[i].sample_times;
         accept_times_all += params[i].accept_times;
     }
+    /*
     printf("sample_times_all=%ld accept_times_all=%ld accept_per=%f c_mh=%d n_mh=%d\n",
             sample_times_all, accept_times_all,
             accept_times_all * 1.0 / sample_times_all,
-	    c_mh, n_mh);
+	    c_mh, n_mh);*/
     return global_ll;
 }
 
@@ -1314,10 +1320,11 @@ double visit_by_col_parallel_dynamic(int D, int V, int K,
         sample_times_all += params[i].sample_times;
         accept_times_all += params[i].accept_times;
     }
+    /*
     printf("sample_times_all=%ld accept_times_all=%ld accept_per=%f c_mh=%d n_mh=%d\n",
             sample_times_all, accept_times_all,
             accept_times_all * 1.0 / sample_times_all,
-	    c_mh, n_mh);
+	    c_mh, n_mh);*/
 
     return global_ll;
 }
@@ -1345,13 +1352,9 @@ double train_for_one_iter_parallel(int iter, int D, int V, int K, int N,
     }
 
     start = get_current_ms();
-    printf("start visit col\n");
-    fflush(stdout);
     ll += visit_by_col_parallel(D, V, K, ws, nk,
             topics, mhs, alpha, beta, vbeta, params);
     
-    printf("finish visit col\n");
-    fflush(stdout);
     end = get_current_ms();
     col_tt = end - start;
 
@@ -1363,20 +1366,15 @@ double train_for_one_iter_parallel(int iter, int D, int V, int K, int N,
     }
 
     start = get_current_ms();
-    printf("start visit row\n");
-    fflush(stdout);
     ll += visit_by_row_parallel(D, V, K, ds, widx, nk, is_short,
             topics, mhs, alpha, beta, vbeta, params);
-    printf("finish visit row\n");
-    fflush(stdout);
 
     end = get_current_ms();
     row_tt = end - start;
     iter_tt = end - stt;
 
-    printf("iter=%d iter_tt=%ld col_tt=%ld row_tt=%ld ll=%f %f M tokens/s\n", 
-            iter, iter_tt, col_tt, row_tt, ll, ((double) N/1e6) / (iter_tt / 1e3));
-    fflush(stdout);
+    //printf("iter=%d iter_tt=%ld col_tt=%ld row_tt=%ld ll=%f %f M tokens/s\n", 
+    //        iter, iter_tt, col_tt, row_tt, ll, ((double) N/1e6) / (iter_tt / 1e3));
     return ll;
 }
 
@@ -1402,14 +1400,10 @@ double train_for_one_iter_parallel_sep(int iter, int D, int V, int K, int N,
     }
 
     start = get_current_ms();
-    printf("start visit col\n");
-    fflush(stdout);
     ll += visit_by_col_parallel_separate(D, V, K, lws, sws, nk,
             ltopics, stopics,
             mhs, alpha, beta, vbeta, params, mhstep);
     
-    printf("finish visit col\n");
-    fflush(stdout);
     end = get_current_ms();
     col_tt = end - start;
 
@@ -1421,20 +1415,15 @@ double train_for_one_iter_parallel_sep(int iter, int D, int V, int K, int N,
     }
 
     start = get_current_ms();
-    printf("start visit row\n");
-    fflush(stdout);
     ll += visit_by_row_parallel_seperate(ld, V, K, lds, lwidx, nk, is_short,
             ltopics, mhs, alpha, beta, vbeta, params, mhstep);
-    printf("finish visit row\n");
-    fflush(stdout);
 
     end = get_current_ms();
     row_tt = end - start;
     iter_tt = end - stt;
 
-    printf("iter=%d iter_tt=%ld col_tt=%ld row_tt=%ld ll=%f %f M tokens/s\n", 
-            iter, iter_tt, col_tt, row_tt, ll, ((double) N/1e6) / (iter_tt / 1e3));
-    fflush(stdout);
+    //printf("iter=%d iter_tt=%ld col_tt=%ld row_tt=%ld ll=%f %f M tokens/s\n", 
+    //        iter, iter_tt, col_tt, row_tt, ll, ((double) N/1e6) / (iter_tt / 1e3));
     return ll;
 }
 
@@ -1460,8 +1449,6 @@ double train_for_one_iter_parallel_dyn(int iter, int D, int V, int K, int N,
     }
 
     start = get_current_ms();
-    printf("start visit col\n");
-    fflush(stdout);
     ll += visit_by_col_parallel_dynamic(D, V, K, lws, sws, nk,
             ltopics, stopics,
             mhs, alpha, beta, vbeta, params, mhsteps, max_mh);
@@ -1477,13 +1464,10 @@ double train_for_one_iter_parallel_dyn(int iter, int D, int V, int K, int N,
     double one_over_accept = sample_times_all * 1.0 / accept_times_all;
     int temp_mh = (int) one_over_accept + 1;
     int next_mh = std::min(std::max(mhsteps[0], temp_mh), max_mh);
-    printf("next_mh=%d\n", next_mh);
 
     mhsteps[0] = mhsteps[1];
     mhsteps[1] = next_mh;
     
-    printf("finish visit col\n");
-    fflush(stdout);
     end = get_current_ms();
     col_tt = end - start;
 
@@ -1495,8 +1479,6 @@ double train_for_one_iter_parallel_dyn(int iter, int D, int V, int K, int N,
     }
 
     start = get_current_ms();
-    printf("start visit row\n");
-    fflush(stdout);
     ll += visit_by_row_parallel_dynamic(ld, V, K, lds, lwidx, nk, is_short,
             ltopics, mhs, alpha, beta, vbeta, params, mhsteps, max_mh);
 
@@ -1511,21 +1493,16 @@ double train_for_one_iter_parallel_dyn(int iter, int D, int V, int K, int N,
     one_over_accept = sample_times_all * 1.0 / accept_times_all;
     temp_mh = (int) one_over_accept + 1;
     next_mh = std::min(std::max(mhsteps[0], temp_mh), max_mh);
-    printf("next_mh=%d\n", next_mh);
 
     mhsteps[0] = mhsteps[1];
     mhsteps[1] = next_mh;
  
-    printf("finish visit row\n");
-    fflush(stdout);
-
     end = get_current_ms();
     row_tt = end - start;
     iter_tt = end - stt;
 
-    printf("iter=%d iter_tt=%ld col_tt=%ld row_tt=%ld ll=%f %f M tokens/s\n", 
-            iter, iter_tt, col_tt, row_tt, ll, ((double) N/1e6) / (iter_tt / 1e3));
-    fflush(stdout);
+    //printf("iter=%d iter_tt=%ld col_tt=%ld row_tt=%ld ll=%f %f M tokens/s\n", 
+    //        iter, iter_tt, col_tt, row_tt, ll, ((double) N/1e6) / (iter_tt / 1e3));
     return ll;
 }
 
