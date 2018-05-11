@@ -465,11 +465,14 @@ public class CombineLDASeparate {
     long ftree_tt = System.currentTimeMillis() - start;
 
     start = System.currentTimeMillis();
+    trainLong(it);
     ll += trainLong(it);
     long warp_tt = System.currentTimeMillis() - start;
 
     if (test) {
       ll += computeDocLLH();
+    } else {
+      ll = 0;
     }
 
     System.out.format("it=%d ll=%f ftree_tt=%d warp_tt=%d\n", it, ll,

@@ -15,11 +15,11 @@ mvn package
 input=data/nips.train
 K=1000
 V=12420
-threadNum=8
+threadNum=16
 iterations=100
 split=600
 jvmOpts="-Djava.library.path=jni"
-java -cp target/hybridlda-1.0-jar-with-dependencies.jar -Xmx1g $jvmOpts lda.parallel.CombineLDA \
+java -cp target/hybridlda-1.0-jar-with-dependencies.jar -Xmx1g $jvmOpts lda.parallel.CombineLDASeparate \
 	$input $V $K $threadNum $iterations $split
 ```
 
