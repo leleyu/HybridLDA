@@ -391,7 +391,11 @@ public class CombineLDA {
 
   public void iteration(int it) {
 
-    test = true;
+    if (it % 5 == 0)
+      test = true;
+    else
+      test = false;
+
     double ll = 0;
 
     long start;

@@ -580,7 +580,7 @@ public class CombineLDASeparate {
     float beta  = 0.01F;
     int taskNum = Integer.parseInt(argv[3]);
     int length  = Integer.parseInt(argv[5]);
-    int mh_steps = Integer.parseInt(argv[6]);
+    int mh_steps = 2;
 
     System.out.format("alpha=%f beta=%f V=%d K=%d mh=%d\n",
             alpha, beta, V, K, mh_steps);
